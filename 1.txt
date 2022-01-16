@@ -1,0 +1,143 @@
+#include <iostream>
+#include <string>
+#include <ctime>
+
+
+using namespace std;
+
+/**
+	 * \brief Определение размера массива.
+	 * \param Значение размера массива, вводимое пользователем.
+	 * \return Размер массива.
+	 */
+size_t size_array(const string& input_suze);
+
+
+
+/**
+	* \brief Создание массива и заполнение его случайными числами.
+	* \param Массив и размер массива.
+	*/
+void filling_array(double *array, const size_t size);
+
+
+
+/**
+	* \brief Вывод массива на экран.
+	* \param Массив и размер массива.
+	*/
+void print_array(const double* array, const size_t size);
+
+
+
+/**
+	* \brief Сортировка массива.
+	* \param Массив и размер массива.
+	* \return Отсортированный массив.
+	*/
+void sort_array_Shell(double *array, const size_t size);
+
+
+
+/**
+	* \brief Создание массива и заполнение его случайными числами.
+	* \param Массив и размер массива.
+	*/
+int main()
+{
+	setlocale(LC_ALL, "ru");
+	size_t size;
+	size = size_array("Input size of the array.");
+	double* array = new double[size];
+	filling_array(array, size);
+	print_array(array, size);
+	cout << "Sorted array:  " <<endl; 
+	sort_array_Shell(array, size);
+	print_array(array, size);
+	if (array != nullptr)
+	{
+		delete[] array;
+		array = nullptr;
+	}
+	return 0;
+
+}
+
+size_t size_array(const string& input_suze)
+{
+	int size = -1;
+	cout << input_suze << endl;
+	cin >> size;
+
+	if (size < 0)
+	{
+		cout << "Invalid array size value entered. Enter a number 0 or greater than 0 ";
+		cin >> size;
+	}
+	return size;
+}
+
+void filling_array(double *array, const size_t size)
+{
+	const int generation_range = 100;
+
+	srand(time(NULL));
+
+	bool already_have;
+
+	for (size_t i = 0; i < size;)
+	{
+		already_have = false;//исключу повторения псевдослучайных чисел в цикле
+		double new_value = double(rand() % generation_range);
+		for (int j = 0; j < i; j++)
+		{
+			if (array[j] == new_value)
+			{
+				already_have = true;
+				break;
+			}
+		}
+		if (!already_have)
+		{
+			array[i] = new_value;
+			i++;
+		}
+	}
+}
+
+void print_array(const double* array, const size_t size)
+{
+	cout << "Generated array:" << endl;
+	for (size_t i = 0; i < size; ++i)
+	{
+		cout << array[i] << " ; ";
+	}
+	cout << endl;
+}
+
+void sort_array_Shell(double *array, const size_t size)
+{
+	int h = size / 2;
+	while (h > 0)
+	{
+		for (int i = 0; i < (size - h); i++)
+		{
+			int j = i;
+			while (j >= 0)
+			{
+				if (array[j] > array[j + h])
+				{
+					double tmp = array[j];
+					array[j] = array[j + h];
+					array[j + h] = tmp;
+					j = j - h;
+
+				}
+				else j--;
+			}
+		}
+		h = h / 2;
+
+	}
+
+}
